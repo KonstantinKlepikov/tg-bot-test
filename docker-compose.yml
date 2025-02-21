@@ -1,0 +1,36 @@
+﻿version: "3"
+
+name: tg-bot-test
+
+services:
+
+
+#   paiger-telegram-bot:
+#     restart: always
+#     image: "!!!"
+#     ports:
+#     - "!!!!:8080"
+#     environment:
+#       TELEGRAM_BOT_TOKEN: ИД_БОТА_ИЗ_BotFather
+#       WEBHOOK_URL: https://!domen!/api/telegram/notification?apiKey=haO1238amA
+#       API_URL: https://!domen!
+#       API_KEY: haO1238amA
+#     networks:
+#       - tg-bot-test-local
+
+
+  paiger-telegram-backend:
+    image: paiger-telegram-backend
+    container_name: paiger-telegram-backend
+    ports:
+      - "8123:80"
+    build:
+      context: ./
+      dockerfile: Dockerfile.backend
+    volumes:
+      - ./app:/app
+    networks:
+      - tg-bot-test-local
+
+networks:
+  tg-bot-test-local:

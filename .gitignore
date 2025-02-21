@@ -1,0 +1,16 @@
+# phpstorm project files
+.idea
+
+# Mac DS_Store Files
+.DS_Store
+__pycache__
+venv
+.venv
+
+# local
+.python-version
+poetry.toml
+.vscode
+app/result/*
+!app/result/.gitkeep
+docker-stack.yml

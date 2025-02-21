@@ -1,0 +1,282 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "FastAPI",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/tg/page/{channel_id}": {
+            "post": {
+                "tags": ["match"],
+                "summary": "Match service user and tg channel",
+                "operationId": "match_service_user_and_tg_channel__post",
+                "parameters": [{
+                    "name": "channel_id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "title": "channel_id"
+                    }
+                }],
+                "responses": {
+                    "201": {
+                        "description": "Ok"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": ["page"],
+                "summary": "Create or update page from channel",
+                "operationId": "create_page__post",
+                "parameters": [{
+                    "name": "channel_id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "string",
+                        "title": "channel_id"
+                    }
+                }],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewChananelRequestModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewChananelRequestModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewChananelRequestModel"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [{
+                                "type": "string"
+                            }, {
+                                "type": "integer"
+                            }]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": ["loc", "msg", "type"],
+                "title": "ValidationError"
+            },
+            "MessageEntityModel": {
+                "required": [
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "title": "Message type"
+                    },
+                    "offset": {
+                        "type": "integer",
+                        "title": "Message offset",
+                        "format": "int32",
+                        "example": 10
+                    },
+                    "length": {
+                        "type": "integer",
+                        "title": "Message lenght",
+                        "format": "int32",
+                        "example": 55
+                    },
+                    "url": {
+                        "type": "string",
+                        "title": "Message url",
+                        "nullable": true
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/UserInfo",
+                        "title": "Message author"
+                    },
+                    "language": {
+                        "type": "string",
+                        "title": "Message language",
+                        "nullable": true
+                    },
+                    "customEmojiId": {
+                        "type": "string",
+                        "title": "Message custom emogy id",
+                        "nullable": true
+                    }
+                }
+            },
+            "MessageModel": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Message id",
+                        "format": "int64",
+                        "example": 12345678
+                    },
+                    "text": {
+                        "type": "string",
+                        "title": "Message text",
+                        "example": 12345678,
+                        "nullable": true
+                    },
+                    "date": {
+                        "type": "string",
+                        "title": "Dt of creation string repesentation",
+                        "format": "date-time",
+                        "example": "2025-02-17T17:16:44.386Z"
+                    },
+                    "timespan": {
+                        "type": "integer",
+                        "title": "Dt of creation in seconds in UNIX",
+                        "format": "int64",
+                        "example": 1739812663
+                    },
+                    "entities": {
+                        "type": "array",
+                        "title": "Message entities",
+                        "items": {
+                            "$ref": "#/components/schemas/MessageEntityModel"
+                        }
+                    },
+                    "photos": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "title": "Message photos",
+                            "format": "byte",
+                            "example": "some bytes"
+                        }
+                    }
+                },
+                "nullable": true
+            },
+            "NewChananelRequestModel": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Channel name",
+                        "nullable": true,
+                        "example": "The cats"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Channel description count",
+                        "nullable": true,
+                        "example": "my beurifull channel"
+                    },
+                    "countMembers": {
+                        "type": "integer",
+                        "title": "Current members count",
+                        "format": "int64",
+                        "nullable": true,
+                        "example": 120
+                    },
+                    "pinnedMessage": {
+                        "$ref": "#/components/schemas/MessageModel"
+                    },
+                    "lastMessage": {
+                        "$ref": "#/components/schemas/MessageModel"
+                    },
+                    "photo": {
+                        "type": "string",
+                        "title": "Channel photo",
+                        "format": "byte",
+                        "nullable": true,
+                        "example": "some bytes"
+                    }
+                }
+            },
+            "UserInfo": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Tg user id",
+                        "format": "int64",
+                        "example": 55566688
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Tg user nickname",
+                        "example": "this_is_patric",
+                        "nullable": true
+                    }
+                },
+                "nullable": true
+            }
+        }
+    }
+}
