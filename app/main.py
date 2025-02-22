@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 class UserInfo(BaseModel):
-    id: int | None
+    id: int
     username: str | None
 
 
@@ -19,13 +19,13 @@ class MessageEntityModel(BaseModel):
     offset: int
     length: int
     url: str | None
-    user: UserInfo
-    language: str
-    customEmojiId: str
+    user: UserInfo | None
+    language: str | None
+    customEmojiId: str | None
 
 
 class MessageModel(BaseModel):
-    id: int
+    id: int | None
     text: str | None
     date: datetime
     timespan: int
@@ -44,7 +44,7 @@ class NewChannelRequestModel(BaseModel):
 
 ROOT_DIR = Path(__file__).resolve().parent
 
-scoupe = dict(matched_channel_id='', count=0)
+scoupe = dict(matched_channel_id='', count=0, auth=False)
 
 
 def init_openapi():
@@ -58,10 +58,10 @@ def init_openapi():
 
 @router.post('/tg/page/{channel_id}', status_code=201)
 def match(channel_id: str):
-    if scoupe['count'] == 0:
-        scoupe['matched_channel_id'] = channel_id
-        scoupe['count'] += 1
+    if not scoupe['auth']:
+        scoupe['auth'] = True
         raise HTTPException(404)
+    scoupe['matched_channel_id'] = channel_id
 
 
 @router.put('/tg/page/{channel_id}', status_code=201)
@@ -78,6 +78,7 @@ def update(channel_id: str, body: NewChannelRequestModel):
     if scoupe['count'] == 5:
         scoupe['count'] = 0
         scoupe['matched_channel_id'] = ''
+        scoupe['auth'] = False
 
 
 app = FastAPI()
